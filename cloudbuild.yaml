@@ -1,0 +1,20 @@
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/my-project-1539713919463/locked-on-bills-transcription', '.']
+
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/my-project-1539713919463/locked-on-bills-transcription']
+
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+    - functions
+    - deploy
+    - locked-on-bills-transcription
+    - --entry-point=run
+    - --runtime=python310
+    - --trigger-topic=lob-transcript-topic
+    - --region=us-central1
+    - --memory=512MB
+    - --timeout=540s
+    - --gen2
+    - --image=gcr.io/my-project-1539713919463/locked-on-bills-transcription
