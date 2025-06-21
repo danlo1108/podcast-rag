@@ -111,8 +111,8 @@ def run(cloud_event):
     try:
         url = 'https://feeds.simplecast.com/LIaoLB9Y'
         episode_metadata_df = ingest_podcast_rss(url)
+        episode_metadata_df['published_date'] = pd.to_datetime(episode_metadata_df['published_date'], errors='coerce').dt.strftime('%Y-%m-%d')
 
-        from pandas_gbq import to_gbq
         to_gbq(
             episode_metadata_df,
             'podcast_metadata.locked_on_bills_episode_metadata',
